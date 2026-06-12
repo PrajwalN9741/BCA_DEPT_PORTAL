@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Downloads setup - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main Panel Workspace -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-file-arrow-down text-primary me-2"></i>Downloads & Attachment Desk</h2>
+                <button class="btn btn-primary-custom" data-bs-toggle="collapse" data-bs-target="#uploadDocForm">
+                    <i class="fa-solid fa-plus me-1"></i>Upload Document
+                </button>
+            </div>
+
+            <!-- Upload Form -->
+            <div class="collapse mb-4" id="uploadDocForm">
+                <div class="card card-body shadow-sm border p-4">
+                    <h5 class="fw-bold text-dark mb-3">Upload New Downloadable File</h5>
+                    <form action="{{ url_for('admin.downloads') }}" method="POST" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="title" class="form-label fw-semibold">Document Title *</label>
+                                <input type="text" class="form-control" name="title" required placeholder="Syllabus Batch 2026">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="category" class="form-label fw-semibold">Academic Category *</label>
+                                <select class="form-select" name="category" required>
+                                    <option value="" disabled selected>-- Choose Category --</option>
+                                    <option value="Syllabus">Syllabus Curriculum</option>
+                                    <option value="Time Table">Time Table</option>
+                                    <option value="Academic Calendar">Academic Calendar</option>
+                                    <option value="Notes">Study Notes</option>
+                                    <option value="Question Paper">Previous Question Papers</option>
+                                    <option value="Form">Department Forms</option>
+                                    <option value="Placement">Placement Materials</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="file" class="form-label fw-semibold">Choose File (PDF/Docs/Image) *</label>
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success px-4"><i class="fa-solid fa-cloud-arrow-up me-2"></i>Upload File</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- List Table -->
+            <div class="card border shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-file-invoice me-2"></i>Academic Resource Attachments</h5>
+                </div>
+                <div class="table-responsive">
+                    {% if docs %}
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Document Title</th>
+                                    <th>Category</th>
+                                    <th>File Link</th>
+                                    <th>Upload Date</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in docs %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa-solid fa-file-lines text-primary fs-4 me-3"></i>
+                                                <span class="fw-bold text-dark">{{ item.title }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary text-dark font-monospace">{{ item.category }}</span>
+                                        </td>
+                                        <td class="small font-monospace text-muted text-truncate" style="max-width: 250px;">
+                                            {{ item.file_path.split('/')[-1] }}
+                                        </td>
+                                        <td class="small text-muted">{{ item.upload_date.strftime('%Y-%m-%d') }}</td>
+                                        <td class="text-end pe-4">
+                                            <form action="{{ url_for('admin.delete_download', doc_id=item.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this resource file?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fa-solid fa-trash-can me-1"></i>Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa-solid fa-file-lines fs-2 text-muted mb-2"></i>
+                            <p class="text-muted mb-0">No academic documents uploaded. Add resources using the form above.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

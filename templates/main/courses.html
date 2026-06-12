@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}BCA Curriculum - Courses Details{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;">
+    <div class="container text-center">
+        <h1 class="fw-bold">BCA Course Curriculum</h1>
+        <p class="lead mb-0 text-white-50">Explore our comprehensive semester-wise credits structure and syllabus outcomes.</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Semester Navigation Menu -->
+        <div class="col-lg-3 mb-4">
+            <div class="card border shadow-sm sticky-top" style="top: 80px; z-index: 1;">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list-check me-2"></i>Semesters</h5>
+                </div>
+                <div class="list-group list-group-flush" id="semester-tabs" role="tablist">
+                    {% for sem in curriculum.keys() %}
+                        <button class="list-group-item list-group-item-action py-3 fw-semibold {% if sem == 1 %}active{% endif %}" 
+                                id="sem-{{ sem }}-tab" 
+                                data-bs-toggle="pill" 
+                                data-bs-target="#sem-{{ sem }}" 
+                                type="button" 
+                                role="tab" 
+                                aria-controls="sem-{{ sem }}" 
+                                aria-selected="{% if sem == 1 %}true{% else %}false{% endif %}">
+                            <i class="fa-solid fa-book-open text-primary me-2"></i>Semester {{ sem }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Semester Content Panel -->
+        <div class="col-lg-9">
+            <div class="tab-content" id="semester-tabContent">
+                {% for sem, subjects in curriculum.items() %}
+                    <div class="tab-pane fade {% if sem == 1 %}show active{% endif %}" 
+                         id="sem-{{ sem }}" 
+                         role="tabpanel" 
+                         aria-labelledby="sem-{{ sem }}-tab">
+                         
+                        <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-2">
+                            <h3 class="fw-bold text-dark mb-0">Semester {{ sem }} Subjects</h3>
+                            <span class="badge bg-secondary-custom text-dark fw-bold font-monospace">Credits: {{ subjects | sum(attribute='credits') }}</span>
+                        </div>
+                        
+                        <div class="d-flex flex-column gap-4">
+                            {% for sub in subjects %}
+                                <div class="bg-white p-4 rounded-4 shadow-sm border">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <span class="badge bg-primary mb-2 font-monospace">{{ sub.code }}</span>
+                                            <h4 class="fw-bold text-dark mb-1">{{ sub.name }}</h4>
+                                        </div>
+                                        <span class="badge bg-info text-dark font-monospace">Credits: {{ sub.credits }}</span>
+                                    </div>
+                                    
+                                    <h6 class="fw-bold text-secondary mb-2"><i class="fa-solid fa-bullseye me-2 text-danger"></i>Learning Outcomes:</h6>
+                                    <p class="text-muted mb-3">{{ sub.outcomes }}</p>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ url_for('main.downloads') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fa-solid fa-download me-1"></i>Syllabus PDF
+                                        </a>
+                                        <a href="{{ url_for('main.downloads') }}" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fa-solid fa-file-lines me-1"></i>Notes & Papers
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty Management - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main CRUD Panel -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-users text-primary me-2"></i>Faculty Management</h2>
+                <button class="btn btn-primary-custom" data-bs-toggle="collapse" data-bs-target="#addFacultyForm">
+                    <i class="fa-solid fa-plus me-1"></i>Add Faculty Member
+                </button>
+            </div>
+
+            <!-- Add Faculty Form (Collapsible) -->
+            <div class="collapse mb-4" id="addFacultyForm">
+                <div class="card card-body shadow-sm border p-4">
+                    <h5 class="fw-bold text-dark mb-3">Add New Instructor</h5>
+                    <form action="{{ url_for('admin.faculty') }}" method="POST" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label fw-semibold">Faculty Name *</label>
+                                <input type="text" class="form-control" name="name" required placeholder="Dr. Raghavendra Rao">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="qualification" class="form-label fw-semibold">Qualification *</label>
+                                <input type="text" class="form-control" name="qualification" required placeholder="Ph.D in CS, M.Tech">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="designation" class="form-label fw-semibold">Designation *</label>
+                                <input type="text" class="form-control" name="designation" required placeholder="Associate Professor">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="experience" class="form-label fw-semibold">Teaching Experience (Years) *</label>
+                                <input type="number" class="form-control" name="experience" required placeholder="12">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="photo" class="form-label fw-semibold">Faculty Profile Photo</label>
+                                <input type="file" class="form-control" name="photo" accept="image/*">
+                            </div>
+                            <div class="col-12">
+                                <label for="specialization" class="form-label fw-semibold">Subject Specialization *</label>
+                                <input type="text" class="form-control" name="specialization" required placeholder="AI/ML, Data Structures, Networks">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="email" class="form-label fw-semibold">Email *</label>
+                                <input type="email" class="form-control" name="email" required placeholder="name@college.edu">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="mobile" class="form-label fw-semibold">Contact Mobile *</label>
+                                <input type="tel" class="form-control" name="mobile" required placeholder="10 digit number">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="linkedin" class="form-label fw-semibold">LinkedIn Profile URL</label>
+                                <input type="url" class="form-control" name="linkedin" placeholder="https://linkedin.com/in/profile">
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success px-4"><i class="fa-solid fa-floppy-disk me-2"></i>Save Faculty</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Faculty Table -->
+            <div class="card border shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list me-2"></i>Instructors List</h5>
+                </div>
+                <div class="table-responsive">
+                    {% if faculties %}
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Instructor Details</th>
+                                    <th>Specialization</th>
+                                    <th>Email / Phone</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fac in faculties %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; font-weight: bold;">
+                                                    {{ fac.name[0] }}
+                                                </div>
+                                                <div>
+                                                    <span class="fw-bold text-dark d-block">{{ fac.name }}</span>
+                                                    <small class="text-secondary">{{ fac.designation }} ({{ fac.experience }} Yrs Exp)</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted small">{{ fac.specialization }}</span>
+                                        </td>
+                                        <td class="small">
+                                            <span class="d-block"><i class="fa-regular fa-envelope me-1 text-primary"></i>{{ fac.email }}</span>
+                                            <span><i class="fa-solid fa-phone me-1 text-secondary"></i>{{ fac.mobile }}</span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <!-- Action Triggers -->
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal-{{ fac.id }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </button>
+                                                <form action="{{ url_for('admin.delete_faculty', fac_id=fac.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this faculty member?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editModal-{{ fac.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title fw-bold">Edit Faculty details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body p-4">
+                                                    <form action="{{ url_for('admin.edit_faculty', fac_id=fac.id) }}" method="POST" enctype="multipart/form-data">
+                                                        <div class="row g-3">
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">Faculty Name *</label>
+                                                                <input type="text" class="form-control" name="name" value="{{ fac.name }}" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">Qualification *</label>
+                                                                <input type="text" class="form-control" name="qualification" value="{{ fac.qualification }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Designation *</label>
+                                                                <input type="text" class="form-control" name="designation" value="{{ fac.designation }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Teaching Experience (Years) *</label>
+                                                                <input type="number" class="form-control" name="experience" value="{{ fac.experience }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Modify photo</label>
+                                                                <input type="file" class="form-control" name="photo" accept="image/*">
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <label class="form-label fw-semibold">Subject Specialization *</label>
+                                                                <input type="text" class="form-control" name="specialization" value="{{ fac.specialization }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Email *</label>
+                                                                <input type="email" class="form-control" name="email" value="{{ fac.email }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Contact Mobile *</label>
+                                                                <input type="tel" class="form-control" name="mobile" value="{{ fac.mobile }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">LinkedIn Profile URL</label>
+                                                                <input type="url" class="form-control" name="linkedin" value="{{ fac.linkedin or '' }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-4 text-end">
+                                                            <button type="submit" class="btn btn-primary-custom px-4"><i class="fa-solid fa-floppy-disk me-2"></i>Save Updates</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa-solid fa-users-slash fs-2 text-muted mb-2"></i>
+                            <p class="text-muted mb-0">No faculty members found. Add using the form above.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.name }} - Details{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('event.list_events') }}">Events</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ event.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <!-- Event Details Column -->
+        <div class="col-lg-8">
+            <div class="bg-white p-5 rounded-4 shadow-sm border mb-4">
+                <span class="badge bg-secondary-custom text-dark mb-3"><i class="fa-solid fa-microchip me-1"></i>BCA Dept Event</span>
+                <h1 class="fw-bold text-dark mb-4">{{ event.name }}</h1>
+                
+                <h5 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-align-left text-primary me-2"></i>Event Description</h5>
+                <p class="text-muted" style="line-height: 1.8;">{{ event.description }}</p>
+                
+                <h5 class="fw-bold text-secondary mt-5 mb-3"><i class="fa-solid fa-circle-exclamation text-primary me-2"></i>Key Guidelines & Information</h5>
+                <ul class="text-muted small">
+                    <li class="mb-2">Participation is open to all computing graduates (BCA, B.Sc CS, MCA).</li>
+                    <li class="mb-2">Ensure you carry a valid student ID card on the event day.</li>
+                    <li class="mb-2">Participants are requested to report at least 30 minutes before the scheduled time.</li>
+                    <li class="mb-2">Certificates of participation will be issued to all candidates who complete the event.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Registration Actions Sidebar Column -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border rounded-4 mb-4">
+                <div class="card-header bg-primary text-white py-3 text-center">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-clock-rotate-left me-2"></i>Event Schedule</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fa-regular fa-calendar-days fs-4 text-primary me-3"></i>
+                        <div>
+                            <span class="d-block text-secondary small">EVENT DATE</span>
+                            <strong class="text-dark">{{ event.date.strftime('%Y-%m-%d %I:%M %p') }}</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fa-solid fa-location-dot fs-4 text-primary me-3"></i>
+                        <div>
+                            <span class="d-block text-secondary small">VENUE LOCATION</span>
+                            <strong class="text-dark">{{ event.venue }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fa-solid fa-indian-rupee-sign fs-4 text-success me-3"></i>
+                        <div>
+                            <span class="d-block text-secondary small">REGISTRATION FEE</span>
+                            <strong class="text-success">{% if event.registration_fee == 0 %}FREE{% else %}Rs. {{ event.registration_fee }}{% endif %}</strong>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4 text-danger">
+                        <i class="fa-solid fa-hourglass-end fs-4 me-3"></i>
+                        <div>
+                            <span class="d-block text-secondary small">REGISTRATION DEADLINE</span>
+                            <strong>{{ event.deadline.strftime('%Y-%m-%d %I:%M %p') }}</strong>
+                        </div>
+                    </div>
+
+                    <!-- Action Trigger -->
+                    <div class="border-top pt-4 mt-3">
+                        {% if is_registered %}
+                            {% if reg_details.payment_status == 'Paid' %}
+                                <div class="alert alert-success text-center mb-0">
+                                    <i class="fa-solid fa-circle-check me-2"></i>You are registered!
+                                    <a href="{{ url_for('event.receipt_view', registration_id=reg_details.id) }}" class="btn btn-sm btn-success w-100 mt-2">
+                                        <i class="fa-solid fa-download me-1"></i>Get Entry Receipt
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning text-center mb-0">
+                                    <i class="fa-solid fa-credit-card me-2"></i>Registration Pending Payment
+                                    <a href="{{ url_for('event.pay_fee', registration_id=reg_details.id) }}" class="btn btn-sm btn-warning w-100 mt-2">
+                                        <i class="fa-solid fa-wallet me-1"></i>Pay Fee Now
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <!-- Enroll logic -->
+                            <a href="{{ url_for('event.register', event_id=event.id) }}" class="btn btn-primary-custom w-100 py-3 fw-bold text-uppercase">
+                                <i class="fa-solid fa-pen-to-square me-2"></i>Register Now
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

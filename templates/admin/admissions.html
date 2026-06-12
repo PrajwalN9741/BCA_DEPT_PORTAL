@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Evaluate Admissions - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main Panel Workspace -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-graduation-cap text-primary me-2"></i>Admissions Evaluations</h2>
+                <span class="badge bg-dark font-monospace py-2 px-3">Enrolled Applications</span>
+            </div>
+
+            <!-- Admissions Table List -->
+            <div class="card border shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list-check me-2"></i>Incoming Applications</h5>
+                </div>
+                <div class="table-responsive">
+                    {% if admissions %}
+                        <table class="table table-hover align-middle mb-0 text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Candidate details</th>
+                                    <th>Aadhaar</th>
+                                    <th>10th / 12th %</th>
+                                    <th>Status</th>
+                                    <th>Verification Docs</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for adm in admissions %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-3" style="width: 45px; height: 45px; font-weight: bold;">
+                                                    {{ adm.full_name[0] }}
+                                                </div>
+                                                <div>
+                                                    <span class="fw-bold text-dark d-block">{{ adm.full_name }}</span>
+                                                    <small class="text-muted">{{ adm.email }} | {{ adm.mobile }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="font-monospace small">{{ adm.aadhaar_number }}</td>
+                                        <td>
+                                            <span class="fw-bold">10th:</span> {{ adm.tenth_percentage }}%<br>
+                                            <span class="fw-bold">12th:</span> {{ adm.twelfth_percentage }}%
+                                        </td>
+                                        <td>
+                                            {% if adm.status == 'Approved' %}
+                                                <span class="badge bg-success"><i class="fa-solid fa-circle-check me-1"></i>Approved</span>
+                                            {% elif adm.status == 'Rejected' %}
+                                                <span class="badge bg-danger"><i class="fa-solid fa-circle-xmark me-1"></i>Rejected</span>
+                                            {% elif adm.status == 'Paid' %}
+                                                <span class="badge bg-warning text-dark"><i class="fa-solid fa-circle-dollar-to-slot me-1"></i>Paid - Under Review</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary"><i class="fa-solid fa-pen-ruler me-1"></i>Draft</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="small">
+                                            <!-- Doc checking drop-down links -->
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                    <i class="fa-solid fa-file-pdf me-1"></i>View Docs
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="{{ url_for('static', filename=adm.photo_path.split('static/', 1)[1]) }}" target="_blank">Candidate Photo</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('static', filename=adm.signature_path.split('static/', 1)[1]) }}" target="_blank">Signature Image</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('static', filename=adm.aadhaar_path.split('static/', 1)[1]) }}" target="_blank">Aadhaar Card</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('static', filename=adm.tenth_marks_path.split('static/', 1)[1]) }}" target="_blank">10th Marks Card</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('static', filename=adm.twelfth_marks_path.split('static/', 1)[1]) }}" target="_blank">12th Marks Card</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('static', filename=adm.tc_path.split('static/', 1)[1]) }}" target="_blank">Transfer Certificate</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            {% if adm.status == 'Paid' %}
+                                                <div class="d-flex justify-content-end gap-2">
+                                                    <form action="{{ url_for('admin.approve_admission', adm_id=adm.id) }}" method="POST">
+                                                        <button type="submit" class="btn btn-sm btn-success px-3 fw-bold">
+                                                            <i class="fa-solid fa-circle-check me-1"></i>Approve
+                                                        </button>
+                                                    </form>
+                                                    <form action="{{ url_for('admin.reject_admission', adm_id=adm.id) }}" method="POST">
+                                                        <button type="submit" class="btn btn-sm btn-danger px-3 fw-bold">
+                                                            <i class="fa-solid fa-circle-xmark me-1"></i>Reject
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted small">Processed</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa-solid fa-inbox fs-2 text-muted mb-2"></i>
+                            <p class="text-muted mb-0">No admissions applications received yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

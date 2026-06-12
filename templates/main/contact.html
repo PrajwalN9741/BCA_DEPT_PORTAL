@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - BCA Department{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;">
+    <div class="container text-center">
+        <h1 class="fw-bold">Contact Department Desk</h1>
+        <p class="lead mb-0 text-white-50">Reach out for academic admissions inquiries, collaborations, or syllabus updates.</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row g-5">
+        <!-- Contact Information Block -->
+        <div class="col-lg-5">
+            <h3 class="fw-bold text-dark mb-4">Get In Touch</h3>
+            <p class="text-muted">Have a query about admission dates, eligibility criteria, or event sponsorships? Send us a message or contact our office coordinators directly using the details below.</p>
+            
+            <div class="d-flex flex-column gap-4 mt-5">
+                <div class="d-flex align-items-start">
+                    <div class="bg-primary text-white p-3 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                        <i class="fa-solid fa-map-location-dot fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Office Address</h6>
+                        <p class="text-muted small mb-0">{{ site_settings.get('contact_address') }}</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-start">
+                    <div class="bg-primary text-white p-3 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                        <i class="fa-solid fa-phone fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Telephone Line</h6>
+                        <p class="text-muted small mb-0">{{ site_settings.get('contact_phone') }}</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-start">
+                    <div class="bg-primary text-white p-3 rounded-circle me-3 d-flex justify-content-center align-items-center" style="width: 50px; height: 50px;">
+                        <i class="fa-solid fa-envelope fs-5"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Admissions Desk Email</h6>
+                        <p class="text-muted small mb-0"><a href="mailto:{{ site_settings.get('contact_email') }}" class="text-decoration-none">{{ site_settings.get('contact_email') }}</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Google Maps Embed -->
+            <div class="mt-5 rounded-4 overflow-hidden border shadow-sm" style="height: 250px;">
+                <iframe src="{{ site_settings.get('google_maps_url') }}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+        
+        <!-- Contact Feedback Form -->
+        <div class="col-lg-7">
+            <div class="bg-white p-5 rounded-4 shadow-sm border">
+                <h3 class="fw-bold text-dark mb-4"><i class="fa-solid fa-envelope-open-text text-primary me-2"></i>Send Message</h3>
+                <form action="{{ url_for('main.contact') }}" method="POST" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label fw-semibold">Full Name *</label>
+                            <input type="text" class="form-control py-2" id="name" name="name" required placeholder="John Doe">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label fw-semibold">Email Address *</label>
+                            <input type="email" class="form-control py-2" id="email" name="email" required placeholder="john@example.com">
+                        </div>
+                        <div class="col-12">
+                            <label for="subject" class="form-label fw-semibold">Subject *</label>
+                            <input type="text" class="form-control py-2" id="subject" name="subject" required placeholder="Query regarding Admission 2026">
+                        </div>
+                        <div class="col-12">
+                            <label for="message" class="form-label fw-semibold">Message Description *</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required placeholder="Please enter your question details..."></textarea>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary-custom w-100 py-3 fw-bold text-uppercase">
+                                <i class="fa-solid fa-paper-plane me-2"></i>Submit Query
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

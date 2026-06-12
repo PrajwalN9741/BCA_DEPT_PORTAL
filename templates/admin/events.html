@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Events Management - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main Panel -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-calendar-days text-primary me-2"></i>Events Management</h2>
+                <button class="btn btn-primary-custom" data-bs-toggle="collapse" data-bs-target="#addEventForm">
+                    <i class="fa-solid fa-plus me-1"></i>Schedule Event
+                </button>
+            </div>
+
+            <!-- Add Event Form -->
+            <div class="collapse mb-4" id="addEventForm">
+                <div class="card card-body shadow-sm border p-4">
+                    <h5 class="fw-bold text-dark mb-3">Schedule New Department Event</h5>
+                    <form action="{{ url_for('admin.events') }}" method="POST" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label fw-semibold">Event Title *</label>
+                                <input type="text" class="form-control" name="name" required placeholder="Full-Stack Hackathon">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="venue" class="form-label fw-semibold">Event Venue *</label>
+                                <input type="text" class="form-control" name="venue" required placeholder="BCA Seminar Hall">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="registration_fee" class="form-label fw-semibold">Registration Fee (Rs.) *</label>
+                                <input type="number" step="0.01" class="form-control" name="registration_fee" value="0.00" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="date" class="form-label fw-semibold">Event Date & Time *</label>
+                                <input type="datetime-local" class="form-control" name="date" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="deadline" class="form-label fw-semibold">Registration Deadline *</label>
+                                <input type="datetime-local" class="form-control" name="deadline" required>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="description" class="form-label fw-semibold">Event Description *</label>
+                                <textarea class="form-control" name="description" rows="3" required placeholder="Detailed information about guidelines, categories, prizes..."></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="poster" class="form-label fw-semibold">Event Poster Image</label>
+                                <input type="file" class="form-control" name="poster" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success px-4"><i class="fa-solid fa-calendar-plus me-2"></i>Schedule Event</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Events List Table -->
+            <div class="card border shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list me-2"></i>Scheduled Events</h5>
+                </div>
+                <div class="table-responsive">
+                    {% if events %}
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Event details</th>
+                                    <th>Venue</th>
+                                    <th>Fee</th>
+                                    <th>Deadline</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in events %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            <span class="fw-bold text-dark d-block">{{ item.name }}</span>
+                                            <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i>{{ item.date.strftime('%Y-%m-%d %I:%M %p') }}</small>
+                                        </td>
+                                        <td>{{ item.venue }}</td>
+                                        <td class="font-monospace fw-bold text-success">
+                                            {% if item.registration_fee == 0 %}FREE{% else %}Rs. {{ item.registration_fee }}{% endif %}
+                                        </td>
+                                        <td class="small text-danger">{{ item.deadline.strftime('%Y-%m-%d %I:%M %p') }}</td>
+                                        <td class="text-end pe-4">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal-{{ item.id }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </button>
+                                                <form action="{{ url_for('admin.delete_event', event_id=item.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editModal-{{ item.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title fw-bold">Modify Scheduled Event</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body p-4">
+                                                    <form action="{{ url_for('admin.edit_event', event_id=item.id) }}" method="POST" enctype="multipart/form-data">
+                                                        <div class="row g-3">
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">Event Title *</label>
+                                                                <input type="text" class="form-control" name="name" value="{{ item.name }}" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">Event Venue *</label>
+                                                                <input type="text" class="form-control" name="venue" value="{{ item.venue }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Registration Fee (Rs.) *</label>
+                                                                <input type="number" step="0.01" class="form-control" name="registration_fee" value="{{ item.registration_fee }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Event Date & Time *</label>
+                                                                <input type="datetime-local" class="form-control" name="date" value="{{ item.date.strftime('%Y-%m-%dT%H:%M') }}" required>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Registration Deadline *</label>
+                                                                <input type="datetime-local" class="form-control" name="deadline" value="{{ item.deadline.strftime('%Y-%m-%dT%H:%M') }}" required>
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <label class="form-label fw-semibold">Event Description *</label>
+                                                                <textarea class="form-control" name="description" rows="4" required>{{ item.description }}</textarea>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold">Modify Poster Poster</label>
+                                                                <input type="file" class="form-control" name="poster" accept="image/*">
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-4 text-end">
+                                                            <button type="submit" class="btn btn-primary-custom px-4"><i class="fa-solid fa-floppy-disk me-2"></i>Save Updates</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa-solid fa-calendar-xmark fs-2 text-muted mb-2"></i>
+                            <p class="text-muted mb-0">No scheduled events found. Schedule using the form above.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

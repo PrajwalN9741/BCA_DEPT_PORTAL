@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects Registry - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main Panel Workspace -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-diagram-project text-primary me-2"></i>Student Projects Registry</h2>
+                <button class="btn btn-primary-custom" data-bs-toggle="collapse" data-bs-target="#addProjForm">
+                    <i class="fa-solid fa-plus me-1"></i>Register Project
+                </button>
+            </div>
+
+            <!-- Add Project Form -->
+            <div class="collapse mb-4" id="addProjForm">
+                <div class="card card-body shadow-sm border p-4">
+                    <h5 class="fw-bold text-dark mb-3">Register Student Project</h5>
+                    <form action="{{ url_for('admin.projects') }}" method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Project Title *</label>
+                                <input type="text" class="form-control" name="title" required placeholder="E-Commerce Website">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Technology Stack *</label>
+                                <input type="text" class="form-control" name="tech" required placeholder="Python Flask, SQLite, JS">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Short Abstract / Description *</label>
+                                <textarea class="form-control" name="description" rows="3" required placeholder="Describe system details, user actions, and core backend logic..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Source Code Repository Link (GitHub)</label>
+                                <input type="url" class="form-control" name="github_url" placeholder="https://github.com/username/project">
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success px-4">Register Project</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Table List -->
+            <div class="card border shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list me-2"></i>Student Projects registry</h5>
+                </div>
+                <div class="table-responsive">
+                    {% if student_projects %}
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Title</th>
+                                    <th>Technology Stack</th>
+                                    <th>Source Link</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for proj in student_projects %}
+                                    <tr>
+                                        <td class="ps-4">
+                                            <strong class="text-dark d-block">{{ proj.title }}</strong>
+                                            <small class="text-muted d-block text-truncate" style="max-width: 250px;">{{ proj.description }}</small>
+                                        </td>
+                                        <td><span class="badge bg-secondary-custom text-dark font-monospace">{{ proj.tech }}</span></td>
+                                        <td>
+                                            {% if proj.github_url %}
+                                                <a href="{{ proj.github_url }}" target="_blank" class="text-decoration-none small">
+                                                    <i class="fa-brands fa-github me-1"></i>GitHub
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted small">None</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProjModal-{{ proj.id }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </button>
+                                                <form action="{{ url_for('admin.delete_project', proj_id=proj.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this project?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Edit Project Modal -->
+                                    <div class="modal fade" id="editProjModal-{{ proj.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title fw-bold">Edit Project details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body p-4">
+                                                    <form action="{{ url_for('admin.edit_project', proj_id=proj.id) }}" method="POST">
+                                                        <div class="row g-3">
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">Project Title *</label>
+                                                                <input type="text" class="form-control" name="title" value="{{ proj.title }}" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">Technology Stack *</label>
+                                                                <input type="text" class="form-control" name="tech" value="{{ proj.tech }}" required>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <label class="form-label fw-semibold">Short Abstract / Description *</label>
+                                                                <textarea class="form-control" name="description" rows="3" required>{{ proj.description }}</textarea>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <label class="form-label fw-semibold">Source Code Repository Link (GitHub)</label>
+                                                                <input type="url" class="form-control" name="github_url" value="{{ proj.github_url or '' }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-4 text-end">
+                                                            <button type="submit" class="btn btn-primary-custom px-4">Save Updates</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa-solid fa-diagram-project fs-2 text-muted mb-2"></i>
+                            <p class="text-muted mb-0">No projects registered. Use form above to add projects.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

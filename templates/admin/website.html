@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Website - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main Form Workspace -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-globe text-primary me-2"></i>Edit Website Content</h2>
+                <span class="badge bg-dark font-monospace py-2 px-3">Content CMS</span>
+            </div>
+
+            <div class="bg-white p-4 rounded-4 shadow-sm border">
+                <form action="{{ url_for('admin.website_content') }}" method="POST">
+                    <!-- Home page Text settings -->
+                    <h5 class="fw-bold border-bottom pb-2 mb-4 text-primary"><i class="fa-solid fa-house me-2"></i>Homepage Welcome Banner</h5>
+                    
+                    <div class="mb-3">
+                        <label for="welcome_title" class="form-label fw-semibold">Homepage Welcome Title</label>
+                        <input type="text" class="form-control" id="welcome_title" name="welcome_title" value="{{ settings.get('welcome_title', '') }}" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="welcome_text" class="form-label fw-semibold">Homepage Welcome Subtitle / Message</label>
+                        <textarea class="form-control" id="welcome_text" name="welcome_text" rows="3" required>{{ settings.get('welcome_text', '') }}</textarea>
+                    </div>
+
+                    <!-- Vision & Mission settings -->
+                    <h5 class="fw-bold border-bottom pb-2 mb-4 mt-5 text-primary"><i class="fa-solid fa-circle-info me-2"></i>Vision, Mission & Goals</h5>
+                    
+                    <div class="mb-3">
+                        <label for="vision_statement" class="form-label fw-semibold">Department Vision Statement</label>
+                        <textarea class="form-control" id="vision_statement" name="vision_statement" rows="3" required>{{ settings.get('vision_statement', '') }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mission_statement" class="form-label fw-semibold">Department Mission Statement</label>
+                        <textarea class="form-control" id="mission_statement" name="mission_statement" rows="3" required>{{ settings.get('mission_statement', '') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="department_highlights" class="form-label fw-semibold">Department Core Highlights (Single paragraph / list summary)</label>
+                        <textarea class="form-control" id="department_highlights" name="department_highlights" rows="3" required>{{ settings.get('department_highlights', '') }}</textarea>
+                    </div>
+
+                    <!-- Contact details -->
+                    <h5 class="fw-bold border-bottom pb-2 mb-4 mt-5 text-primary"><i class="fa-solid fa-address-book me-2"></i>Contact Information</h5>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="contact_email" class="form-label fw-semibold">Contact Email</label>
+                            <input type="email" class="form-control" id="contact_email" name="contact_email" value="{{ settings.get('contact_email', '') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contact_phone" class="form-label fw-semibold">Contact Phone</label>
+                            <input type="text" class="form-control" id="contact_phone" name="contact_phone" value="{{ settings.get('contact_phone', '') }}" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="contact_address" class="form-label fw-semibold">Physical Address</label>
+                            <textarea class="form-control" id="contact_address" name="contact_address" rows="2" required>{{ settings.get('contact_address', '') }}</textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="google_maps_url" class="form-label fw-semibold">Google Maps Embed Link (Iframe src URL only)</label>
+                            <input type="text" class="form-control" id="google_maps_url" name="google_maps_url" value="{{ settings.get('google_maps_url', '') }}" required>
+                        </div>
+                    </div>
+
+                    <!-- Course Fees Settings -->
+                    <h5 class="fw-bold border-bottom pb-2 mb-4 mt-5 text-primary"><i class="fa-solid fa-indian-rupee-sign me-2"></i>BCA Admissions Fees Setup</h5>
+                    
+                    <div class="mb-4 max-w-300">
+                        <label for="admission_fee" class="form-label fw-semibold">BCA Admissions Registration Fee (Rs.)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted">Rs.</span>
+                            <input type="number" step="0.01" class="form-control fw-bold font-monospace text-primary" id="admission_fee" name="admission_fee" value="{{ settings.get('admission_fee', '45000.00') }}" required>
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-4 text-end">
+                        <button type="submit" class="btn btn-primary-custom px-5"><i class="fa-solid fa-floppy-disk me-2"></i>Save Dynamic Updates</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

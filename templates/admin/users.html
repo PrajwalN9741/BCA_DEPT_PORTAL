@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}User Management - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main Panel Workspace -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-user-shield text-primary me-2"></i>User Management</h2>
+                <button class="btn btn-primary-custom" data-bs-toggle="collapse" data-bs-target="#addAdminForm">
+                    <i class="fa-solid fa-plus me-1"></i>Create Admin Account
+                </button>
+            </div>
+
+            <!-- Add Admin Account Form -->
+            <div class="collapse mb-4" id="addAdminForm">
+                <div class="card card-body shadow-sm border p-4">
+                    <h5 class="fw-bold text-dark mb-3">Create Admin User</h5>
+                    <form action="{{ url_for('admin.users') }}" method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="username" class="form-label fw-semibold">Username *</label>
+                                <input type="text" class="form-control" name="username" required placeholder="Choose username">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="email" class="form-label fw-semibold">Email *</label>
+                                <input type="email" class="form-control" name="email" required placeholder="name@college.edu">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="password" class="form-label fw-semibold">Temporary Password *</label>
+                                <input type="password" class="form-control" name="password" required placeholder="Enter password">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="role" class="form-label fw-semibold">System Access Role *</label>
+                                <select class="form-select" name="role" required>
+                                    <option value="staff" selected>Staff Editor</option>
+                                    <option value="super_admin">Super Administrator</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success px-4"><i class="fa-solid fa-user-plus me-2"></i>Create User</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- User List -->
+                <div class="col-lg-7">
+                    <div class="card border shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-header bg-dark text-white py-3">
+                            <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list me-2"></i>Administrators Board</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-4">Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for adm in admins %}
+                                        <tr>
+                                            <td class="ps-4 fw-bold text-dark">{{ adm.username }}</td>
+                                            <td>{{ adm.email }}</td>
+                                            <td>
+                                                <span class="badge {% if adm.role == 'super_admin' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                                    {{ adm.role }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <!-- reset password trigger button opens custom dialog modal -->
+                                                <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#resetModal-{{ adm.id }}">
+                                                    <i class="fa-solid fa-key me-1"></i>Reset
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Reset Password Modal -->
+                                        <div class="modal fade" id="resetModal-{{ adm.id }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title fw-bold">Reset Administrator Password</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body p-4">
+                                                        <form action="{{ url_for('admin.reset_password', user_id=adm.id) }}" method="POST">
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-semibold">New Password for: <strong>{{ adm.username }}</strong></label>
+                                                                <input type="password" class="form-control" name="new_password" required placeholder="Choose strong password">
+                                                            </div>
+                                                            <div class="mt-4 text-end">
+                                                                <button type="submit" class="btn btn-warning fw-bold px-4">Reset Password</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="col-lg-5">
+                    <div class="card shadow-sm border rounded-4 p-4 bg-light">
+                        <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-shield-halved me-2"></i>Access Level Security</h5>
+                        <p class="text-muted small">Only Super Administrators have user creation privileges. Dynamic settings editing, audit log inspections, and report exports are protected via Flask session authorization rules.</p>
+                        <ul class="text-muted small">
+                            <li><strong>Super Admin:</strong> Full CRUD permissions on website files, settings database, and user settings.</li>
+                            <li><strong>Staff:</strong> View, evaluate admissions, schedule events, and manage downloads.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

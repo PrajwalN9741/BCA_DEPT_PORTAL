@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Administrator Login - BCA Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow border rounded-4 overflow-hidden">
+                <div class="bg-dark text-white p-4 text-center">
+                    <h4 class="fw-bold mb-0"><i class="fa-solid fa-screwdriver-wrench me-2"></i>Admin Dashboard Login</h4>
+                    <p class="small text-white-50 mb-0 mt-1">Authorized access to website and portal settings</p>
+                </div>
+                
+                <div class="card-body p-4 p-lg-5">
+                    <form action="{{ url_for('admin.login') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold">Admin Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-user-gear"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" required placeholder="Enter username">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">Admin Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-key"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter password">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-dark w-100 py-2 fw-semibold mb-3">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i>Administrative Login
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{{ url_for('student.login') }}" class="text-muted small text-decoration-none">
+                    <i class="fa-solid fa-user me-1"></i>Go to Student Portal Access
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

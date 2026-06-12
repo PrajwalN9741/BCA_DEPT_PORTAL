@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Department Events - BCA Portal{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;">
+    <div class="container text-center">
+        <h1 class="fw-bold">Department Events & Workshops</h1>
+        <p class="lead mb-0 text-white-50">Register for technical seminars, hackathons, guest lectures, and coding contests.</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    {% if events %}
+        <div class="row g-4">
+            {% for item in events %}
+                <div class="col-md-6 col-lg-6">
+                    <div class="card premium-card h-100 border shadow-sm overflow-hidden">
+                        <div class="row g-0 h-100">
+                            <!-- Date Badge Column -->
+                            <div class="col-sm-3 bg-danger text-white d-flex flex-column justify-content-center align-items-center text-center p-3">
+                                <span class="fs-1 fw-bold">{{ item.date.strftime('%d') }}</span>
+                                <span class="text-uppercase fw-semibold">{{ item.date.strftime('%b') }}</span>
+                                <span class="small opacity-75 mt-1">{{ item.date.strftime('%Y') }}</span>
+                            </div>
+                            
+                            <!-- Detail Column -->
+                            <div class="col-sm-9 d-flex flex-column justify-content-between">
+                                <div class="card-body p-4">
+                                    <h4 class="fw-bold text-dark mb-2">{{ item.name }}</h4>
+                                    <p class="text-muted small mb-3 text-truncate-3">{{ item.description }}</p>
+                                    
+                                    <ul class="list-unstyled mb-0 small">
+                                        <li class="mb-1">
+                                            <strong><i class="fa-solid fa-location-dot text-primary me-2"></i>Venue:</strong> 
+                                            <span class="text-muted">{{ item.venue }}</span>
+                                        </li>
+                                        <li class="mb-1">
+                                            <strong><i class="fa-solid fa-clock text-primary me-2"></i>Time:</strong> 
+                                            <span class="text-muted">{{ item.date.strftime('%I:%M %p') }}</span>
+                                        </li>
+                                        <li class="mb-1">
+                                            <strong><i class="fa-solid fa-indian-rupee-sign text-primary me-2"></i>Registration Fee:</strong> 
+                                            <span class="fw-bold text-success">{% if item.registration_fee == 0 %}FREE{% else %}Rs. {{ item.registration_fee }}{% endif %}</span>
+                                        </li>
+                                        <li class="mb-0">
+                                            <strong><i class="fa-solid fa-hourglass-end text-danger me-2"></i>Deadline:</strong> 
+                                            <span class="text-danger fw-semibold">{{ item.deadline.strftime('%Y-%m-%d %I:%M %p') }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer bg-white border-0 p-4 pt-0">
+                                    <a href="{{ url_for('event.detail', event_id=item.id) }}" class="btn btn-primary-custom btn-sm w-100">
+                                        <i class="fa-solid fa-circle-arrow-right me-1"></i>View Event Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-light border text-center py-5 shadow-sm">
+            <i class="fa-solid fa-calendar-xmark fs-1 text-muted mb-3"></i>
+            <h4>No Events Scheduled</h4>
+            <p class="text-muted">Admins will schedule upcoming workshops and technical drives shortly.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

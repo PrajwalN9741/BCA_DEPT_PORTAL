@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Careers After BCA - Opportunities{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;">
+    <div class="container text-center">
+        <h1 class="fw-bold">Career Opportunities</h1>
+        <p class="lead mb-0 text-white-50">Discover the diverse paths available in technology, development, and research after graduation.</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <!-- Section 1: Employment Profiles -->
+    <section class="mb-5">
+        <h2 class="fw-bold text-dark text-center mb-5"><i class="fa-solid fa-laptop-code text-primary me-2"></i>Job Profiles</h2>
+        <div class="row g-4">
+            {% for job in opportunities %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card premium-card h-100 border shadow-sm p-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold text-dark mb-0">{{ job.title }}</h5>
+                                <span class="badge {% if job.demand == 'Critical' %}bg-danger{% elif job.demand == 'Very High' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                    {{ job.demand }} Demand
+                                </span>
+                            </div>
+                            <p class="text-muted small mb-0">{{ job.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <hr class="my-5">
+
+    <!-- Section 2: Higher Education -->
+    <section>
+        <h2 class="fw-bold text-dark text-center mb-5"><i class="fa-solid fa-graduation-cap text-primary me-2"></i>Postgraduate Academic Options</h2>
+        <div class="row g-4 justify-content-center">
+            {% for edu in higher_edu %}
+                <div class="col-md-6 col-lg-5">
+                    <div class="card h-100 border shadow-sm p-4 bg-white">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="fw-bold text-primary mb-1">{{ edu.name }}</h5>
+                            <span class="badge bg-secondary text-dark font-monospace">{{ edu.duration }}</span>
+                        </div>
+                        <p class="text-muted small mb-0">{{ edu.description }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

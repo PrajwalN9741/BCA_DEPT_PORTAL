@@ -1,0 +1,22 @@
+<div class="col-md-3 col-lg-2 px-0 admin-sidebar d-none d-md-block shadow-sm">
+    <div class="py-4 text-center border-bottom border-secondary">
+        <span class="fs-5 fw-bold text-white"><i class="fa-solid fa-screwdriver-wrench text-warning me-2"></i>Admin Area</span>
+    </div>
+    <div class="list-group list-group-flush mt-3">
+        <a href="{{ url_for('admin.dashboard') }}" class="nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}"><i class="fa-solid fa-chart-line me-2"></i>Analytics Overview</a>
+        <a href="{{ url_for('admin.website_content') }}" class="nav-link {% if request.endpoint == 'admin.website_content' %}active{% endif %}"><i class="fa-solid fa-globe me-2"></i>Manage Website</a>
+        <a href="{{ url_for('admin.courses') }}" class="nav-link {% if request.endpoint == 'admin.courses' %}active{% endif %}"><i class="fa-solid fa-book me-2"></i>Manage Syllabus</a>
+        <a href="{{ url_for('admin.careers') }}" class="nav-link {% if request.endpoint == 'admin.careers' %}active{% endif %}"><i class="fa-solid fa-briefcase me-2"></i>Manage Careers</a>
+        <a href="{{ url_for('admin.projects') }}" class="nav-link {% if request.endpoint == 'admin.projects' %}active{% endif %}"><i class="fa-solid fa-diagram-project me-2"></i>Manage Projects</a>
+        <a href="{{ url_for('admin.faculty') }}" class="nav-link {% if request.endpoint == 'admin.faculty' or request.endpoint == 'admin.edit_faculty' %}active{% endif %}"><i class="fa-solid fa-users me-2"></i>Faculty Board</a>
+        <a href="{{ url_for('admin.events') }}" class="nav-link {% if request.endpoint == 'admin.events' or request.endpoint == 'admin.edit_event' %}active{% endif %}"><i class="fa-solid fa-calendar-days me-2"></i>Manage Events</a>
+        <a href="{{ url_for('admin.admissions') }}" class="nav-link {% if request.endpoint == 'admin.admissions' %}active{% endif %}"><i class="fa-solid fa-graduation-cap me-2"></i>Admissions Panel</a>
+        <a href="{{ url_for('admin.payments') }}" class="nav-link {% if request.endpoint == 'admin.payments' %}active{% endif %}"><i class="fa-solid fa-credit-card me-2"></i>Fee Payments</a>
+        <a href="{{ url_for('admin.gallery') }}" class="nav-link {% if request.endpoint == 'admin.gallery' %}active{% endif %}"><i class="fa-regular fa-images me-2"></i>Media Gallery</a>
+        <a href="{{ url_for('admin.downloads') }}" class="nav-link {% if request.endpoint == 'admin.downloads' %}active{% endif %}"><i class="fa-solid fa-file-arrow-down me-2"></i>Downloads Desk</a>
+        {% if current_user.role == 'super_admin' %}
+            <a href="{{ url_for('admin.users') }}" class="nav-link {% if request.endpoint == 'admin.users' %}active{% endif %}"><i class="fa-solid fa-user-shield me-2"></i>Admin Users</a>
+        {% endif %}
+        <a href="{{ url_for('admin.reports') }}" class="nav-link {% if request.endpoint == 'admin.reports' or request.endpoint == 'admin.export_report' %}active{% endif %}"><i class="fa-solid fa-file-invoice me-2"></i>Generate Reports</a>
+    </div>
+</div>

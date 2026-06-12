@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Downloads Section - BCA Department{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;">
+    <div class="container text-center">
+        <h1 class="fw-bold">Downloads Desk</h1>
+        <p class="lead mb-0 text-white-50">Access semester timetables, academic calendars, syllabus logs, and sample papers directly.</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    {% if download_files %}
+        <div class="card border shadow-sm rounded-4 overflow-hidden">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="fa-solid fa-cloud-arrow-down me-2"></i>Academic Resources</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" class="ps-4">Document Title</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Upload Date</th>
+                            <th scope="col" class="text-end pe-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for file in download_files %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa-solid fa-file-pdf text-danger fs-4 me-3"></i>
+                                        <div>
+                                            <span class="fw-bold text-dark d-block">{{ file.title }}</span>
+                                            <small class="text-muted font-monospace">{{ file.file_path.split('/')[-1] }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary text-dark font-monospace">{{ file.category }}</span>
+                                </td>
+                                <td class="text-muted small">
+                                    {{ file.upload_date.strftime('%Y-%m-%d') }}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="{{ url_for('main.download_file', file_id=file.id) }}" class="btn btn-sm btn-primary-custom py-1 px-3">
+                                        <i class="fa-solid fa-download me-1"></i>Download
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-light border text-center py-5 shadow-sm">
+            <i class="fa-solid fa-file-excel fs-1 text-muted mb-3"></i>
+            <h4>No Academic Files Available</h4>
+            <p class="text-muted">Admins will upload resources like exam syllabus and timetables shortly.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

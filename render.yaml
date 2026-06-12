@@ -1,0 +1,24 @@
+# Render Blueprint Specification for BCA Department Portal
+# Reference: https://render.com/docs/blueprints
+
+databases:
+  - name: bca-db
+    databaseName: bca_dept
+    user: bca_user
+    plan: free
+
+services:
+  - type: web
+    name: bca-department-portal
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python init_db.py
+    startCommand: gunicorn run:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bca-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.12

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Receipt - Validation Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 text-center">
+            <!-- Verification Card -->
+            <div class="card shadow border-0 rounded-4 overflow-hidden">
+                <div class="bg-success text-white py-4">
+                    <div class="fs-1 mb-2"><i class="fa-solid fa-shield-check"></i></div>
+                    <h3 class="fw-bold mb-0">Receipt Verified Successfully!</h3>
+                    <p class="small text-white-50 mb-0">Official NCB BCA Verification Portal</p>
+                </div>
+                
+                <div class="card-body p-4 p-lg-5">
+                    <div class="alert alert-success d-inline-block px-4 py-2 rounded-pill font-monospace mb-4">
+                        Receipt Type: {{ type }}
+                    </div>
+
+                    <ul class="list-group list-group-flush text-start mb-4">
+                        <li class="list-group-item d-flex justify-content-between py-3">
+                            <span class="text-secondary">Payer Name:</span>
+                            <strong class="text-dark">{{ data.name if type == 'Event Registration' else data.full_name }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between py-3">
+                            <span class="text-secondary">Receipt Number:</span>
+                            <span class="font-monospace text-dark fw-bold">{{ data.receipt_number }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between py-3">
+                            <span class="text-secondary">Transaction Reference:</span>
+                            <span class="font-monospace text-muted">{{ data.transaction_id }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between py-3">
+                            <span class="text-secondary">Payment Channel:</span>
+                            <span class="text-dark">{{ data.payment_method }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between py-3">
+                            <span class="text-secondary">Amount Audited:</span>
+                            <strong class="text-success">Rs. {{ "{:,.2f}".format(data.amount_paid) }}</strong>
+                        </li>
+                    </ul>
+
+                    <p class="text-muted small mb-0"><i class="fa-solid fa-lock text-success me-1"></i>This transaction ledger record matches official college DB entries. No further verification is required.</p>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{{ url_for('main.home') }}" class="btn btn-outline-primary px-4 py-2 rounded-pill">
+                    <i class="fa-solid fa-house me-1"></i>Go to Homepage
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

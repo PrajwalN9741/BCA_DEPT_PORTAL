@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Syllabus Setup - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main Panel Workspace -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-book text-primary me-2"></i>Curriculum Syllabus CRUD</h2>
+                <button class="btn btn-primary-custom" data-bs-toggle="collapse" data-bs-target="#addCourseForm">
+                    <i class="fa-solid fa-plus me-1"></i>Add Course Subject
+                </button>
+            </div>
+
+            <!-- Add Course Form -->
+            <div class="collapse mb-4" id="addCourseForm">
+                <div class="card card-body shadow-sm border p-4">
+                    <h5 class="fw-bold text-dark mb-3">Add New Subject</h5>
+                    <form action="{{ url_for('admin.courses') }}" method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="code" class="form-label fw-semibold">Course Code *</label>
+                                <input type="text" class="form-control" name="code" required placeholder="BCA101T">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="name" class="form-label fw-semibold">Subject Title *</label>
+                                <input type="text" class="form-control" name="name" required placeholder="Programming in C">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="semester" class="form-label fw-semibold">Target Semester *</label>
+                                <select class="form-select" name="semester" required>
+                                    {% for s in range(1, 7) %}
+                                        <option value="{{ s }}">Semester {{ s }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="credits" class="form-label fw-semibold">Course Credits *</label>
+                                <input type="number" class="form-control" name="credits" value="4" min="1" max="10" required>
+                            </div>
+                            <div class="col-md-9">
+                                <label for="outcomes" class="form-label fw-semibold">Learning Outcomes *</label>
+                                <input type="text" class="form-control" name="outcomes" required placeholder="Describe major subject key outcomes">
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success px-4"><i class="fa-solid fa-floppy-disk me-2"></i>Save Subject</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Table List -->
+            <div class="card border shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list me-2"></i>Curriculum List</h5>
+                </div>
+                <div class="table-responsive">
+                    {% if courses %}
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Code</th>
+                                    <th>Subject Title</th>
+                                    <th>Sem</th>
+                                    <th>Credits</th>
+                                    <th>Outcomes</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in courses %}
+                                    <tr>
+                                        <td class="ps-4 font-monospace fw-bold text-primary">{{ c.code }}</td>
+                                        <td><strong>{{ c.name }}</strong></td>
+                                        <td><span class="badge bg-secondary">Sem {{ c.semester }}</span></td>
+                                        <td class="font-monospace fw-bold">{{ c.credits }}</td>
+                                        <td class="text-muted small text-truncate" style="max-width: 250px;">{{ c.outcomes }}</td>
+                                        <td class="text-end pe-4">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal-{{ c.id }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </button>
+                                                <form action="{{ url_for('admin.delete_course', course_id=c.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this course?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editModal-{{ c.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title fw-bold">Edit Subject details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body p-4">
+                                                    <form action="{{ url_for('admin.edit_course', course_id=c.id) }}" method="POST">
+                                                        <div class="row g-3">
+                                                            <div class="col-md-3">
+                                                                <label class="form-label fw-semibold">Course Code *</label>
+                                                                <input type="text" class="form-control" name="code" value="{{ c.code }}" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label fw-semibold">Subject Title *</label>
+                                                                <input type="text" class="form-control" name="name" value="{{ c.name }}" required>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="form-label fw-semibold">Target Semester *</label>
+                                                                <select class="form-select" name="semester" required>
+                                                                    {% for s in range(1, 7) %}
+                                                                        <option value="{{ s }}" {% if c.semester == s %}selected{% endif %}>Semester {{ s }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="form-label fw-semibold">Course Credits *</label>
+                                                                <input type="number" class="form-control" name="credits" value="{{ c.credits }}" required>
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <label class="form-label fw-semibold">Learning Outcomes *</label>
+                                                                <input type="text" class="form-control" name="outcomes" value="{{ c.outcomes }}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-4 text-end">
+                                                            <button type="submit" class="btn btn-primary-custom px-4"><i class="fa-solid fa-floppy-disk me-2"></i>Save Updates</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa-solid fa-book-open fs-2 text-muted mb-2"></i>
+                            <p class="text-muted mb-0">No subjects scheduled. Add syllabus records using the button above.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

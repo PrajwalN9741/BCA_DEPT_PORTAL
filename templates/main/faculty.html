@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty - BCA Department{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;">
+    <div class="container text-center">
+        <h1 class="fw-bold">Meet Our Faculty</h1>
+        <p class="lead mb-0 text-white-50">Learn from experienced academicians, corporate veterans, and research scholars.</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    {% if faculties %}
+        <div class="row g-4">
+            {% for fac in faculties %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card premium-card h-100 border shadow-sm">
+                        <!-- Faculty Image / Placeholder -->
+                        <div class="position-relative text-center bg-light py-4 border-bottom">
+                            <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mx-auto" style="width: 120px; height: 120px; font-size: 3rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.15)">
+                                {{ fac.name[0] }}
+                            </div>
+                            <h5 class="fw-bold text-dark mt-3 mb-1">{{ fac.name }}</h5>
+                            <span class="badge bg-secondary-custom text-dark fw-bold font-monospace">{{ fac.designation }}</span>
+                        </div>
+                        
+                        <!-- Faculty Details -->
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <strong><i class="fa-solid fa-graduation-cap text-primary me-2"></i>Qualification:</strong><br>
+                                    <span class="text-muted small">{{ fac.qualification }}</span>
+                                </li>
+                                <li class="mb-2">
+                                    <strong><i class="fa-solid fa-briefcase text-primary me-2"></i>Experience:</strong>
+                                    <span class="text-muted">{{ fac.experience }} Years</span>
+                                </li>
+                                <li class="mb-2">
+                                    <strong><i class="fa-solid fa-gears text-primary me-2"></i>Specialization:</strong><br>
+                                    <span class="text-muted small">{{ fac.specialization }}</span>
+                                </li>
+                                <li class="mb-2">
+                                    <strong><i class="fa-solid fa-envelope text-primary me-2"></i>Email:</strong>
+                                    <a href="mailto:{{ fac.email }}" class="text-decoration-none small">{{ fac.email }}</a>
+                                </li>
+                                <li class="mb-3">
+                                    <strong><i class="fa-solid fa-phone text-primary me-2"></i>Mobile:</strong>
+                                    <span class="text-muted small">{{ fac.mobile }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Faculty Footer / Profile Links -->
+                        {% if fac.linkedin %}
+                        <div class="card-footer bg-white border-0 text-center pb-3">
+                            <a href="{{ fac.linkedin }}" target="_blank" class="btn btn-sm btn-outline-primary px-3 rounded-pill">
+                                <i class="fa-brands fa-linkedin me-2"></i>LinkedIn Profile
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-light border text-center py-5 shadow-sm">
+            <i class="fa-solid fa-users-slash fs-1 text-muted mb-3"></i>
+            <h4>No Faculty Members Seeded</h4>
+            <p class="text-muted">Run the database seeder script or add faculty members through the admin portal dashboard.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

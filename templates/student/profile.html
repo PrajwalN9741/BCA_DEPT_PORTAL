@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - Student Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow border rounded-4 overflow-hidden">
+                <div class="bg-primary text-white p-4">
+                    <h4 class="fw-bold mb-0"><i class="fa-solid fa-user-pen me-2"></i>Configure Student Profile</h4>
+                    <p class="small text-white-50 mb-0 mt-1">Keep your demographic and contact details updated</p>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('student.profile') }}" method="POST" enctype="multipart/form-data">
+                        <!-- Profile Photo Section -->
+                        <div class="text-center mb-4">
+                            {% if student.profile_photo %}
+                                <img src="{{ url_for('static', filename=student.profile_photo.replace('static/', '')) }}" class="rounded-circle border shadow-sm mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 120px; height: 120px; font-size: 3rem;">
+                                    {{ student.username[0].upper() }}
+                                </div>
+                            {% endif %}
+                            
+                            <div class="mb-3">
+                                <label for="profile_photo" class="form-label fw-semibold d-block small">Change Profile Picture</label>
+                                <input class="form-control form-control-sm max-w-300 mx-auto" type="file" id="profile_photo" name="profile_photo" accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold text-muted">Username (Cannot Change)</label>
+                            <input type="text" class="form-control bg-light" id="username" value="{{ student.username }}" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold text-muted">Email Address (Cannot Change)</label>
+                            <input type="email" class="form-control bg-light" id="email" value="{{ student.email }}" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label fw-semibold">Full Name *</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ student.full_name or '' }}" required placeholder="Enter your full name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="mobile" class="form-label fw-semibold">Mobile Number *</label>
+                            <input type="tel" class="form-control" id="mobile" name="mobile" value="{{ student.mobile or '' }}" required placeholder="Enter mobile number">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="semester" class="form-label fw-semibold">Current Semester *</label>
+                            <select class="form-select" id="semester" name="semester" required>
+                                {% for s in range(1, 7) %}
+                                    <option value="{{ s }}" {% if student.semester == s %}selected{% endif %}>Semester {{ s }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary-custom flex-grow-1"><i class="fa-solid fa-floppy-disk me-2"></i>Save Changes</button>
+                            <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

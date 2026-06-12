@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - {{ event.name }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow border rounded-4 overflow-hidden">
+                <div class="bg-primary text-white p-4">
+                    <h4 class="fw-bold mb-1"><i class="fa-solid fa-file-signature me-2"></i>Event Enrollment Form</h4>
+                    <p class="small text-white-50 mb-0">Event: {{ event.name }}</p>
+                </div>
+                
+                <div class="card-body p-4 p-lg-5">
+                    <div class="alert alert-light border mb-4">
+                        <i class="fa-solid fa-circle-info me-2 text-primary"></i>
+                        Registration Fee: <strong class="text-success">{% if event.registration_fee == 0 %}FREE{% else %}Rs. {{ event.registration_fee }}{% endif %}</strong>
+                    </div>
+
+                    <form action="{{ url_for('event.register', event_id=event.id) }}" method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">Participant Full Name *</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ student.full_name or '' }}" required placeholder="Enter name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="usn" class="form-label fw-semibold">University USN *</label>
+                            <input type="text" class="form-control" id="usn" name="usn" value="{{ student.usn or '' }}" required placeholder="e.g. NCB26BCA1001">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="semester" class="form-label fw-semibold">Active Semester *</label>
+                            <select class="form-select" id="semester" name="semester" required>
+                                {% for s in range(1, 7) %}
+                                    <option value="{{ s }}" {% if student.semester == s %}selected{% endif %}>Semester {{ s }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">Contact Email *</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ student.email }}" required placeholder="name@domain.com">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="mobile" class="form-label fw-semibold">Mobile Number *</label>
+                            <input type="tel" class="form-control" id="mobile" name="mobile" value="{{ student.mobile or '' }}" required placeholder="10 digit contact number">
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary-custom flex-grow-1">
+                                {% if event.registration_fee == 0 %}
+                                    <i class="fa-solid fa-calendar-check me-2"></i>Complete Registration
+                                {% else %}
+                                    <i class="fa-solid fa-credit-card me-2"></i>Proceed to Payment
+                                {% endif %}
+                            </button>
+                            <a href="{{ url_for('event.detail', event_id=event.id) }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Login - BCA Department Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow border rounded-4 overflow-hidden">
+                <!-- Portal Header banner -->
+                <div class="bg-primary text-white p-4 text-center">
+                    <h4 class="fw-bold mb-0"><i class="fa-solid fa-user-lock me-2"></i>Student Portal Login</h4>
+                    <p class="small text-white-50 mb-0 mt-1">Access admission status and events registration logs</p>
+                </div>
+                
+                <!-- Authentication Form -->
+                <div class="card-body p-4 p-lg-5">
+                    <form action="{{ url_for('student.login') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" required placeholder="Enter username">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-key"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter password">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary-custom w-100 py-2 fw-semibold mb-3">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i>Secure Login
+                        </button>
+                        
+                        <div class="text-center">
+                            <span class="small text-muted">New applicant? </span>
+                            <a href="{{ url_for('student.register') }}" class="small fw-bold text-decoration-none">Create Account</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Link to Admin Login -->
+            <div class="text-center mt-4">
+                <a href="{{ url_for('admin.login') }}" class="text-muted small text-decoration-none">
+                    <i class="fa-solid fa-screwdriver-wrench me-1"></i>Administrative Portal Access
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

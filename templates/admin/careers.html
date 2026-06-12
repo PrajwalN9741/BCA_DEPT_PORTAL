@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Careers & Education - Admin Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation Menu -->
+        {% include 'admin/sidebar.html' %}
+        
+        <!-- Main Panel Workspace -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-briefcase text-primary me-2"></i>Careers & Higher Education CRUD</h2>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary-custom" data-bs-toggle="collapse" data-bs-target="#addOppForm">
+                        <i class="fa-solid fa-plus me-1"></i>Add Job Profile
+                    </button>
+                    <button class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#addEduForm">
+                        <i class="fa-solid fa-plus me-1"></i>Add pg Program
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add Career Opportunity Form -->
+            <div class="collapse mb-4" id="addOppForm">
+                <div class="card card-body shadow-sm border p-4">
+                    <h5 class="fw-bold text-dark mb-3">Add New Career Opportunity</h5>
+                    <form action="{{ url_for('admin.careers') }}" method="POST">
+                        <input type="hidden" name="action_type" value="opportunity">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Job Title *</label>
+                                <input type="text" class="form-control" name="title" required placeholder="Full Stack Developer">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Demand Level *</label>
+                                <select class="form-select" name="demand" required>
+                                    <option value="High" selected>High</option>
+                                    <option value="Very High">Very High</option>
+                                    <option value="Critical">Critical</option>
+                                    <option value="Medium">Medium</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Profile Description *</label>
+                                <textarea class="form-control" name="description" rows="2" required placeholder="Describe responsibilities and technology target domains..."></textarea>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-success px-4">Save Job Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Add Higher Education Form -->
+            <div class="collapse mb-4" id="addEduForm">
+                <div class="card card-body shadow-sm border p-4 bg-light">
+                    <h5 class="fw-bold text-dark mb-3">Add Postgraduate Program Path</h5>
+                    <form action="{{ url_for('admin.careers') }}" method="POST">
+                        <input type="hidden" name="action_type" value="education">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Course Name *</label>
+                                <input type="text" class="form-control" name="name" required placeholder="MCA (Master of Computer Applications)">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Duration *</label>
+                                <input type="text" class="form-control" name="duration" value="2 Years" required placeholder="2 Years">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Short Description *</label>
+                                <textarea class="form-control" name="description" rows="2" required placeholder="Brief information about career prospects..."></textarea>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-primary px-4">Save Postgraduate Program</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- 1. Job Opportunities List -->
+                <div class="col-lg-6">
+                    <div class="card border shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-header bg-dark text-white py-3">
+                            <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list-check me-2"></i>Tech Job Profiles</h5>
+                        </div>
+                        <div class="table-responsive">
+                            {% if opportunities %}
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="ps-4">Title</th>
+                                            <th>Demand</th>
+                                            <th class="text-end pe-4">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for job in opportunities %}
+                                            <tr>
+                                                <td class="ps-4">
+                                                    <strong class="text-dark d-block">{{ job.title }}</strong>
+                                                    <small class="text-muted d-block text-truncate" style="max-width: 200px;">{{ job.description }}</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge {% if job.demand == 'Critical' %}bg-danger{% elif job.demand == 'Very High' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                                        {{ job.demand }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editJobModal-{{ job.id }}">
+                                                            <i class="fa-solid fa-pen"></i>
+                                                        </button>
+                                                        <form action="{{ url_for('admin.delete_opportunity', opp_id=job.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this job profile?');">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Edit Job Modal -->
+                                            <div class="modal fade" id="editJobModal-{{ job.id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title fw-bold">Edit Job profile</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body p-4">
+                                                            <form action="{{ url_for('admin.edit_opportunity', opp_id=job.id) }}" method="POST">
+                                                                <div class="row g-3">
+                                                                    <div class="col-md-6">
+                                                                        <label class="form-label fw-semibold">Job Title *</label>
+                                                                        <input type="text" class="form-control" name="title" value="{{ job.title }}" required>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="form-label fw-semibold">Demand Level *</label>
+                                                                        <select class="form-select" name="demand" required>
+                                                                            <option value="High" {% if job.demand == 'High' %}selected{% endif %}>High</option>
+                                                                            <option value="Very High" {% if job.demand == 'Very High' %}selected{% endif %}>Very High</option>
+                                                                            <option value="Critical" {% if job.demand == 'Critical' %}selected{% endif %}>Critical</option>
+                                                                            <option value="Medium" {% if job.demand == 'Medium' %}selected{% endif %}>Medium</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <label class="form-label fw-semibold">Profile Description *</label>
+                                                                        <textarea class="form-control" name="description" rows="3" required>{{ job.description }}</textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mt-4 text-end">
+                                                                    <button type="submit" class="btn btn-primary-custom px-4">Save Updates</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <div class="text-center py-4 text-muted">No opportunities listed.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Higher Education List -->
+                <div class="col-lg-6">
+                    <div class="card border shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-header bg-dark text-white py-3">
+                            <h5 class="mb-0 fw-bold"><i class="fa-solid fa-graduation-cap me-2"></i>pg Program Pathways</h5>
+                        </div>
+                        <div class="table-responsive">
+                            {% if higher_edu %}
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="ps-4">Course</th>
+                                            <th>Duration</th>
+                                            <th class="text-end pe-4">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for edu in higher_edu %}
+                                            <tr>
+                                                <td class="ps-4">
+                                                    <strong class="text-dark d-block">{{ edu.name }}</strong>
+                                                    <small class="text-muted d-block text-truncate" style="max-width: 200px;">{{ edu.description }}</small>
+                                                </td>
+                                                <td><span class="badge bg-secondary text-dark">{{ edu.duration }}</span></td>
+                                                <td class="text-end pe-4">
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editEduModal-{{ edu.id }}">
+                                                            <i class="fa-solid fa-pen"></i>
+                                                        </button>
+                                                        <form action="{{ url_for('admin.delete_education', edu_id=edu.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this postgraduate path?');">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Edit Education Modal -->
+                                            <div class="modal fade" id="editEduModal-{{ edu.id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title fw-bold">Edit Postgraduate path</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body p-4">
+                                                            <form action="{{ url_for('admin.edit_education', edu_id=edu.id) }}" method="POST">
+                                                                <div class="row g-3">
+                                                                    <div class="col-md-6">
+                                                                        <label class="form-label fw-semibold">Course Name *</label>
+                                                                        <input type="text" class="form-control" name="name" value="{{ edu.name }}" required>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="form-label fw-semibold">Duration *</label>
+                                                                        <input type="text" class="form-control" name="duration" value="{{ edu.duration }}" required>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <label class="form-label fw-semibold">Short Description *</label>
+                                                                        <textarea class="form-control" name="description" rows="3" required>{{ edu.description }}</textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mt-4 text-end">
+                                                                    <button type="submit" class="btn btn-primary-custom px-4">Save Updates</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <div class="text-center py-4 text-muted">No postgraduate programs listed.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

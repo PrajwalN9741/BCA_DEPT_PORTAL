@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Photo Gallery - BCA Department{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="bg-primary text-white py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;">
+    <div class="container text-center">
+        <h1 class="fw-bold">Department Gallery</h1>
+        <p class="lead mb-0 text-white-50">Glimpses of dynamic fests, technical workshops, seminars, and cultural performances.</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    {% if gallery_items %}
+        <!-- Category Filter Buttons -->
+        <div class="d-flex justify-content-center flex-wrap gap-2 mb-5">
+            <button class="btn btn-outline-primary active px-4 rounded-pill filter-btn" data-filter="all">All Media</button>
+            {% for cat in categories %}
+                <button class="btn btn-outline-primary px-4 rounded-pill filter-btn" data-filter="{{ cat }}">{{ cat }}</button>
+            {% endfor %}
+        </div>
+        
+        <!-- Media Grid -->
+        <div class="row g-4" id="gallery-container">
+            {% for item in gallery_items %}
+                <div class="col-md-6 col-lg-4 gallery-item-card" data-category="{{ item.category }}">
+                    <div class="gallery-grid-item">
+                        {% if item.type == 'Video' %}
+                            <!-- Video Placeholder with play button -->
+                            <div class="bg-dark text-white d-flex justify-content-center align-items-center position-relative" style="height: 250px;">
+                                <i class="fa-solid fa-circle-play fs-1 text-danger"></i>
+                                <span class="position-absolute bottom-0 start-0 p-3 bg-dark bg-opacity-70 w-100 text-center small">{{ item.title }} (Video)</span>
+                            </div>
+                        {% else %}
+                            <div class="bg-secondary bg-opacity-10 d-flex justify-content-center align-items-center" style="height: 250px;">
+                                <i class="fa-regular fa-image fs-1 text-primary"></i>
+                            </div>
+                        {% endif %}
+                        <div class="gallery-overlay">
+                            <h5 class="fw-bold text-truncate">{{ item.title }}</h5>
+                            <span class="badge bg-warning text-dark">{{ item.category }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-light border text-center py-5 shadow-sm">
+            <i class="fa-regular fa-images fs-1 text-muted mb-3"></i>
+            <h4>No Gallery Media Uploaded</h4>
+            <p class="text-muted">Admins can upload photos and activities inside the Admin Dashboard.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const galleryItems = document.querySelectorAll(".gallery-item-card");
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener("click", function() {
+            // Remove active class
+            filterBtns.forEach(b => b.classList.remove("active"));
+            this.classList.add("active");
+            
+            const filterValue = this.getAttribute("data-filter");
+            
+            galleryItems.forEach(item => {
+                if (filterValue === "all" || item.getAttribute("data-category") === filterValue) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

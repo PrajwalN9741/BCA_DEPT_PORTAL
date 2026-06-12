@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Department of Computer Applications{% endblock %}
+
+{% block content %}
+<!-- Hero Slider Section -->
+<div class="hero-slider-container">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-title">Unlock Your Digital Potential with <span>BCA Degree</span></h1>
+                    <p class="hero-subtitle">Step into a world of software engineering, artificial intelligence, and cloud architectures. Learn from industry-leading instructors and secure high-paying placements.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary-custom btn-lg"><i class="fa-solid fa-gauge me-2"></i>Go to Dashboard</a>
+                        {% else %}
+                            <a href="{{ url_for('student.register') }}" class="btn btn-secondary-custom btn-lg"><i class="fa-solid fa-user-plus me-2"></i>Apply for Admission 2026</a>
+                            <a href="{{ url_for('student.login') }}" class="btn btn-outline-light btn-lg"><i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Student Login</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Welcome Section -->
+<div class="container my-5 py-4">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <span class="text-uppercase text-primary fw-bold letter-spacing-1">Overview</span>
+            <h2 class="mt-2 mb-4 text-dark font-heading fw-bold">{{ site_settings.get('welcome_title', 'Welcome to the BCA Department') }}</h2>
+            <p class="lead text-secondary">{{ site_settings.get('welcome_text') }}</p>
+            <p>The Department of Computer Applications offers a comprehensive 3-year bachelor program focusing on state-of-the-art software systems. Students get hands-on labs, collaborative team projects, industry mentoring, and specialized seminar training.</p>
+            <div class="row mt-4 g-3">
+                <div class="col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-circle-check text-success fs-4 me-3"></i>
+                        <span class="fw-semibold">Industry Aligned</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-circle-check text-success fs-4 me-3"></i>
+                        <span class="fw-semibold">100% Placement Support</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-circle-check text-success fs-4 me-3"></i>
+                        <span class="fw-semibold">Advanced Labs</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-circle-check text-success fs-4 me-3"></i>
+                        <span class="fw-semibold">Experienced Faculty</span>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('main.about') }}" class="btn btn-primary-custom mt-4"><i class="fa-solid fa-circle-info me-2"></i>Read More About Us</a>
+        </div>
+        <div class="col-lg-6">
+            <div class="position-relative p-3">
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary bg-opacity-10 rounded-4" style="transform: rotate(-3deg); z-index: -1;"></div>
+                <div class="bg-white p-4 rounded-4 shadow-sm border">
+                    <h4 class="fw-bold mb-3"><i class="fa-solid fa-lightbulb text-warning me-2"></i>Department Vision</h4>
+                    <p class="text-muted mb-4">{{ site_settings.get('vision_statement') }}</p>
+                    <h4 class="fw-bold mb-3"><i class="fa-solid fa-bullseye text-danger me-2"></i>Department Mission</h4>
+                    <p class="text-muted mb-0">{{ site_settings.get('mission_statement') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Animated Counters Section -->
+<div class="bg-primary text-white py-5 counter-section">
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-3 col-sm-6">
+                <div class="counter-box">
+                    <i class="fa-solid fa-user-graduate fs-1 text-warning mb-3"></i>
+                    <div class="counter-val" data-target="{{ stats.students }}">0</div>
+                    <p class="mb-0 text-white-50 fw-semibold">Active Students</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="counter-box">
+                    <i class="fa-solid fa-chalkboard-user fs-1 text-warning mb-3"></i>
+                    <div class="counter-val" data-target="{{ stats.faculty }}">0</div>
+                    <p class="mb-0 text-white-50 fw-semibold">Expert Teachers</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="counter-box">
+                    <i class="fa-solid fa-briefcase fs-1 text-warning mb-3"></i>
+                    <div class="counter-val" data-target="{{ stats.placements }}">0</div>
+                    <p class="mb-0 text-white-50 fw-semibold">Placement Rate %</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="counter-box">
+                    <i class="fa-solid fa-computer fs-1 text-warning mb-3"></i>
+                    <div class="counter-val" data-target="{{ stats.labs }}">0</div>
+                    <p class="mb-0 text-white-50 fw-semibold">Modern Tech Labs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- News, Announcements & Events Dashboard -->
+<div class="container my-5 py-4">
+    <div class="row g-4">
+        <!-- Announcements Column -->
+        <div class="col-lg-7">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-bullhorn text-primary me-2"></i>News & Notices</h3>
+                <span class="badge bg-primary rounded-pill">Latest Announcements</span>
+            </div>
+            {% if latest_news %}
+                <div class="d-flex flex-column gap-3">
+                    {% for item in latest_news %}
+                        <div class="bg-white p-4 rounded-3 border shadow-sm hover-shadow transition">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-info text-dark font-monospace text-uppercase">{{ item.category }}</span>
+                                <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ item.created_at.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                            <h5 class="fw-bold text-dark mb-2">{{ item.title }}</h5>
+                            <p class="text-muted mb-0 small">{{ item.content }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-light border text-center py-4">
+                    <i class="fa-regular fa-bell-slash fs-2 text-muted mb-2"></i>
+                    <p class="mb-0">No announcements posted yet.</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Events Column -->
+        <div class="col-lg-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-calendar-days text-danger me-2"></i>Events</h3>
+                <a href="{{ url_for('event.list_events') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            {% if upcoming_events %}
+                <div class="d-flex flex-column gap-3">
+                    {% for item in upcoming_events %}
+                        <div class="bg-white rounded-3 border shadow-sm overflow-hidden d-flex">
+                            <div class="bg-danger text-white d-flex flex-column justify-content-center align-items-center px-3 text-center" style="width: 80px;">
+                                <span class="fs-4 fw-bold">{{ item.date.strftime('%d') }}</span>
+                                <span class="text-uppercase small">{{ item.date.strftime('%b') }}</span>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <h6 class="fw-bold text-dark mb-1">{{ item.name }}</h6>
+                                <p class="text-muted mb-2 small"><i class="fa-solid fa-location-dot me-1"></i>{{ item.venue }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="small text-primary fw-bold">Fee: Rs. {{ item.registration_fee }}</span>
+                                    <a href="{{ url_for('event.detail', event_id=item.id) }}" class="btn btn-sm btn-outline-danger py-0 px-2 font-monospace">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-light border text-center py-4">
+                    <i class="fa-regular fa-calendar-xmark fs-2 text-muted mb-2"></i>
+                    <p class="mb-0">No upcoming events listed.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Placement Recruiter Logos Section -->
+<div class="bg-light py-5 border-top border-bottom">
+    <div class="container">
+        <h4 class="text-center fw-bold mb-5 text-secondary">Our Top Placement Recruiters</h4>
+        <div class="row g-4 justify-content-center align-items-center text-center">
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="bg-white p-3 rounded shadow-sm border"><i class="fa-brands fa-amazon fs-2 text-dark"></i><br><small class="fw-semibold">Amazon</small></div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="bg-white p-3 rounded shadow-sm border"><i class="fa-brands fa-google fs-2 text-primary"></i><br><small class="fw-semibold">Google</small></div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="bg-white p-3 rounded shadow-sm border"><i class="fa-brands fa-microsoft fs-2 text-info"></i><br><small class="fw-semibold">Microsoft</small></div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="bg-white p-3 rounded shadow-sm border"><i class="fa-brands fa-salesforce fs-2 text-primary"></i><br><small class="fw-semibold">Salesforce</small></div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="bg-white p-3 rounded shadow-sm border"><i class="fa-solid fa-code fs-2 text-success"></i><br><small class="fw-semibold">TCS</small></div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="bg-white p-3 rounded shadow-sm border"><i class="fa-solid fa-network-wired fs-2 text-danger"></i><br><small class="fw-semibold">Cisco</small></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+{% if testimonials %}
+<div class="container my-5 py-4">
+    <h3 class="text-center fw-bold mb-5 text-dark"><i class="fa-solid fa-quote-left text-warning me-2"></i>Alumni Testimonials</h3>
+    <div class="row g-4">
+        {% for test in testimonials %}
+            <div class="col-md-6 col-lg-6">
+                <div class="testimonial-card">
+                    <p class="italic text-muted mb-4">"{{ test.testimonial }}"</p>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; font-weight: bold;">
+                            {{ test.name[0] }}
+                        </div>
+                        <div>
+                            <h6 class="mb-0 fw-bold text-dark">{{ test.name }}</h6>
+                            <small class="text-muted">{{ test.position }} at {{ test.company }} (Class of {{ test.graduation_year }})</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Call to Action Banner -->
+<div class="bg-dark text-white py-5 text-center position-relative">
+    <div class="container py-4">
+        <h2 class="fw-bold mb-3">Begin Your Technology Journey Today</h2>
+        <p class="lead mb-4 text-white-50 max-w-600 mx-auto">Applications are open for the academic batch 2026-29. Submit your academic papers online and reserve your seat.</p>
+        <a href="{{ url_for('student.register') }}" class="btn btn-secondary-custom btn-lg"><i class="fa-solid fa-user-plus me-2"></i>Admission Registration Form</a>
+    </div>
+</div>
+{% endblock %}

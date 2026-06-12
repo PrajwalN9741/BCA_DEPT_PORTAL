@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+{% block title %}Apply for Admission - BCA 2026{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Title -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-dark"><i class="fa-solid fa-file-signature text-primary me-2"></i>BCA Admissions Application 2026</h2>
+                <p class="text-muted">Complete the form below, upload your academic credentials, and proceed to submit the admission fee.</p>
+            </div>
+            
+            <form action="{{ url_for('admission.apply') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <!-- Section 1: Personal Information -->
+                <div class="card shadow-sm border rounded-4 mb-4">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fa-solid fa-user me-2"></i>1. Personal Information</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="full_name" class="form-label fw-semibold">Full Name (As in Marks Card) *</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" required placeholder="Enter your full name">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="dob" class="form-label fw-semibold">Date of Birth *</label>
+                                <input type="date" class="form-control" id="dob" name="dob" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="gender" class="form-label fw-semibold">Gender *</label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="father_name" class="form-label fw-semibold">Father's Name *</label>
+                                <input type="text" class="form-control" id="father_name" name="father_name" required placeholder="Father's full name">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="mother_name" class="form-label fw-semibold">Mother's Name *</label>
+                                <input type="text" class="form-control" id="mother_name" name="mother_name" required placeholder="Mother's full name">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="aadhaar_number" class="form-label fw-semibold">Aadhaar Card Number *</label>
+                                <input type="text" class="form-control" id="aadhaar_number" name="aadhaar_number" pattern="\d{12}" required placeholder="12 digit Aadhaar number">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="mobile" class="form-label fw-semibold">Mobile Number *</label>
+                                <input type="tel" class="form-control" id="mobile" name="mobile" required placeholder="10 digit contact number">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="email" class="form-label fw-semibold">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" required placeholder="name@domain.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Contact Address -->
+                <div class="card shadow-sm border rounded-4 mb-4">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fa-solid fa-map-location-dot me-2"></i>2. Contact Address</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="address" class="form-label fw-semibold">Address Line *</label>
+                                <textarea class="form-control" id="address" name="address" rows="3" required placeholder="Street address, house/flat number, area details"></textarea>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="city" class="form-label fw-semibold">City *</label>
+                                <input type="text" class="form-control" id="city" name="city" required placeholder="City name">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="district" class="form-label fw-semibold">District *</label>
+                                <input type="text" class="form-control" id="district" name="district" required placeholder="District name">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="state" class="form-label fw-semibold">State *</label>
+                                <input type="text" class="form-control" id="state" name="state" required placeholder="State name">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="pin_code" class="form-label fw-semibold">PIN Code *</label>
+                                <input type="text" class="form-control" id="pin_code" name="pin_code" pattern="\d{6}" required placeholder="6 digit code">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Academic Information & Selection -->
+                <div class="card shadow-sm border rounded-4 mb-4">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fa-solid fa-book me-2"></i>3. Academic Details & Course Selection</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="tenth_percentage" class="form-label fw-semibold">10th Grade Percentage *</label>
+                                <input type="number" step="0.01" min="0" max="100" class="form-control" id="tenth_percentage" name="tenth_percentage" required placeholder="e.g. 88.5">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="twelfth_percentage" class="form-label fw-semibold">12th Grade Percentage *</label>
+                                <input type="number" step="0.01" min="0" max="100" class="form-control" id="twelfth_percentage" name="twelfth_percentage" required placeholder="e.g. 91.2">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="board_details" class="form-label fw-semibold">12th Board Details *</label>
+                                <input type="text" class="form-control" id="board_details" name="board_details" required placeholder="e.g. CBSE, State Board">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="previous_degree" class="form-label fw-semibold">Previous Certificate *</label>
+                                <select class="form-select" id="previous_degree" name="previous_degree">
+                                    <option value="12th/PUC" selected>12th / PUC / Intermediate</option>
+                                    <option value="Diploma">Diploma in Engineering</option>
+                                    <option value="Other">Other Equivalent</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12 mt-4 pt-3 border-top">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <h5 class="fw-bold mb-1">Applying Course Programme:</h5>
+                                        <p class="text-muted small mb-md-0">The portal currently accepts online enrollments for BCA course only.</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control bg-light fs-5 fw-bold text-center border-primary" value="BCA - Bachelor of Computer Applications" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Upload Documents -->
+                <div class="card shadow-sm border rounded-4 mb-5">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fa-solid fa-file-arrow-up me-2"></i>4. Upload Academic Credentials (PNG/JPG/PDF, Max 5MB)</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <!-- Photo -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Passport Photo (Image only) *</label>
+                                <div class="file-upload-wrapper">
+                                    <i class="fa-solid fa-user-tie fs-2 mb-2 text-muted"></i>
+                                    <p class="upload-label-text mb-0 small">Drag and drop or browse file</p>
+                                    <input type="file" name="photo" class="file-upload-input" accept="image/*" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Signature -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Candidate Signature (Image only) *</label>
+                                <div class="file-upload-wrapper">
+                                    <i class="fa-solid fa-signature fs-2 mb-2 text-muted"></i>
+                                    <p class="upload-label-text mb-0 small">Drag and drop or browse file</p>
+                                    <input type="file" name="signature" class="file-upload-input" accept="image/*" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Aadhaar Card -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Aadhaar Card Copy (Image/PDF) *</label>
+                                <div class="file-upload-wrapper">
+                                    <i class="fa-solid fa-id-card fs-2 mb-2 text-muted"></i>
+                                    <p class="upload-label-text mb-0 small">Drag and drop or browse file</p>
+                                    <input type="file" name="aadhaar" class="file-upload-input" accept="image/*,application/pdf" required>
+                                </div>
+                            </div>
+                            
+                            <!-- 10th Marks Card -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">10th Standard Marks Sheet (Image/PDF) *</label>
+                                <div class="file-upload-wrapper">
+                                    <i class="fa-solid fa-file-circle-check fs-2 mb-2 text-muted"></i>
+                                    <p class="upload-label-text mb-0 small">Drag and drop or browse file</p>
+                                    <input type="file" name="tenth_marks" class="file-upload-input" accept="image/*,application/pdf" required>
+                                </div>
+                            </div>
+                            
+                            <!-- 12th Marks Card -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">12th Standard Marks Sheet (Image/PDF) *</label>
+                                <div class="file-upload-wrapper">
+                                    <i class="fa-solid fa-file-circle-check fs-2 mb-2 text-muted"></i>
+                                    <p class="upload-label-text mb-0 small">Drag and drop or browse file</p>
+                                    <input type="file" name="twelfth_marks" class="file-upload-input" accept="image/*,application/pdf" required>
+                                </div>
+                            </div>
+                            
+                            <!-- TC -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">School/College Transfer Certificate (Image/PDF) *</label>
+                                <div class="file-upload-wrapper">
+                                    <i class="fa-solid fa-arrow-right-arrow-left fs-2 mb-2 text-muted"></i>
+                                    <p class="upload-label-text mb-0 small">Drag and drop or browse file</p>
+                                    <input type="file" name="tc" class="file-upload-input" accept="image/*,application/pdf" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline-secondary px-4 py-2 rounded-pill"><i class="fa-solid fa-chevron-left me-2"></i>Back to Dashboard</a>
+                    <button type="submit" class="btn btn-primary-custom px-5 py-3 rounded-pill text-uppercase fw-bold"><i class="fa-solid fa-credit-card me-2"></i>Proceed to Fee Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Enable Bootstrap custom validation triggers
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+
+    // Make file upload wrappers clickable and sync input
+    const wrappers = document.querySelectorAll('.file-upload-wrapper');
+    wrappers.forEach(wrap => {
+        const input = wrap.querySelector('.file-upload-input');
+        wrap.addEventListener('click', function() {
+            input.click();
+        });
+        
+        input.addEventListener('click', function(e) {
+            e.stopPropagation(); // Avoid loop trigger
+        });
+    });
+});
+</script>
+{% endblock %}
