@@ -86,8 +86,10 @@ def create_app(config_override=None):
         
     return app
 
+# Expose app at the module level for Gunicorn / WSGI
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
     # Ensure database file exists
     with app.app_context():
         db.create_all()
