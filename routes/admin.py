@@ -2,7 +2,6 @@ import os
 from io import BytesIO
 from datetime import datetime
 from functools import wraps
-import pandas as pd
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from models import (
@@ -546,10 +545,20 @@ def export_report(format_type, report_category):
 
     # Process Format Type
     if format_type == 'excel':
-        df = pd.DataFrame(data, columns=columns)
+        import openpyxl
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = 'Report'
+        
+        # Write headers
+        ws.append(columns)
+        
+        # Write data rows
+        for row in data:
+            ws.append(row)
+            
         output = BytesIO()
-        with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False, sheet_name='Report')
+        wb.save(output)
         output.seek(0)
         
         return send_file(
