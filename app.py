@@ -89,8 +89,9 @@ def create_app(config_override=None):
 # Expose app at the module level for Gunicorn / WSGI
 app = create_app()
 
+# Ensure database tables exist at startup
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    # Ensure database file exists
-    with app.app_context():
-        db.create_all()
     app.run(debug=True, port=5000)

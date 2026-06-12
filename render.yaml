@@ -12,7 +12,7 @@ services:
     name: bca-department-portal
     runtime: python
     buildCommand: pip install -r requirements.txt && python init_db.py
-    startCommand: gunicorn run:app
+    startCommand: gunicorn app:app --bind 0.0.0.0:10000
     envVars:
       - key: DATABASE_URL
         fromDatabase:
